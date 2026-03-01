@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Survey Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f0f2f5;
+      color: #1c1e21;
+    }
+    header {
+      background: #1877f2;
+      color: #fff;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.6rem;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 16px;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .card h2 {
+      margin-top: 0;
+      color: #1877f2;
+    }
+    iframe {
+      width: 100%;
+      min-height: 600px;
+      border: none;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Facebook Web</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/form">Survey Form</a>
+    </nav>
+  </header>
+  <main>
+    <div class="card">
+      <h2>Survey Form</h2>
+      <p>Please fill out the form below.</p>
+      <!-- Replace the src URL below with your actual Google Form embed link.
+           Example: https://docs.google.com/forms/d/e/<YOUR_FORM_ID>/viewform?embedded=true -->
+      <iframe
+        src="https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?embedded=true"
+        title="Google Form Survey">
+        Loading…
+      </iframe>
+    </div>
+  </main>
+</body>
+</html>
